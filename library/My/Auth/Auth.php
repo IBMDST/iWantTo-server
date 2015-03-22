@@ -20,6 +20,7 @@ class My_Auth_Auth implements Zend_Auth_Adapter_Interface
             'info' => array()
            );
            
+        
           
         $userProfile = $this->_getUserInfo();
 		
@@ -36,7 +37,11 @@ class My_Auth_Auth implements Zend_Auth_Adapter_Interface
 	
 	            $storage = Zend_Auth::getInstance()->getStorage();
 	            unset($userProfile['password']);
-	            $storage->write($userProfile);
+	            
+	            $storageData = array('id' => $userProfile['_id'] ->__toString(), 'username' => $userProfile['username'],
+						'isAdmin' => $userProfile['isAdmin'], 'email' => $userProfile['email']);
+	            
+	            $storage->write($storageData);
 	            
 	            $userSession = new Zend_Session_Namespace($userNameSpace);
 	            
