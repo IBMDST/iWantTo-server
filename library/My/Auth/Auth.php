@@ -66,7 +66,7 @@ class My_Auth_Auth implements Zend_Auth_Adapter_Interface
  	
  	private function _getUserInfo()
  	{
- 		$userLoginInfo = array("username" => $this->_username,"password" => $this->_password);
+ 		$userLoginInfo = array("username" => $this->_username,"password" => md5($this->_password));
  		$userCollection = new Application_Model_DbCollections_Users();
  		
  		try

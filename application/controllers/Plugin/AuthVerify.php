@@ -18,17 +18,26 @@ class AuthVerify extends Zend_Controller_Plugin_Abstract
 
 		$resource = strtoupper($controller);
 		$action   = strtoupper($action);
+		
 
-
-		if (!$this -> _userid)
+		if (!$this -> _userid )
 		{
-			$controller = 'users';
-			$action     = 'login';
+			if((!($resource =='USERS' && $action =='CREATEUSER')
+				||  ($resource =='USERS' && $action =='LOGIN')))
+			{
+				$controller = 'index';
+				$action     = 'index';
+			}
+
 		}
+	
 
 		$request -> setModuleName($module);
 		$request -> setControllerName($controller);
 		$request -> setActionName($action);
+			
+
+		
 	}
 
 

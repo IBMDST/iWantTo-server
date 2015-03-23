@@ -21,8 +21,7 @@ class UsersController extends My_Center_Controller
 			$username = $this->_request->getParam('username');
 			$password = $this->_request->getParam('password');
 			
-			$username = 'Shaon';
-			$password = "123";
+			
 			try 
 			{
 				if (Zend_Auth::getInstance()->hasIdentity()) 
@@ -44,11 +43,11 @@ class UsersController extends My_Center_Controller
 			}
 			catch (Zend_Auth_Exception $e)
 			{
-				$this->returnJson(0, 'Sorry System has some issues during the auth processing');
+				$this->returnJson(0, 'Sorry System has some issues during the auth processing',$e->getMessage());
 			}
 			catch (Zend_Exception $e)
 			{
-				$this->returnJson(0, 'Sorry System has some issues');
+				$this->returnJson(0, 'Sorry System has some issues',$e->getMessage());
 			}
 			
 			
@@ -71,8 +70,8 @@ class UsersController extends My_Center_Controller
 		
 		try 
 		{
-			Zend_Auth::getInstance()->getStorage()->clear();
 			Zend_Session::destroy();
+		
 			$this->returnJson(1, "Logout successfully");
 		}
 		catch (Zend_Session_Exception $e)
@@ -139,6 +138,53 @@ class UsersController extends My_Center_Controller
 		}
 
 	}
+	
+	
+	public function getOneUserProfileAction()
+	{
+		if(!$this->_request->getMethod() == "GET")
+		{
+			$this->returnJson(0, "Please use the right request method");
+		}
+	if (!$this->_request->has('id'))
+		{
+			$this->returnJson(0, 'Parameters error');
+		}
+		
+		$userCollection = new Application_Model_DbCollections_Users();
+		
+		try 
+		{
+			$id = new MongoId($this->_request->getParam('id'));
+			$temp = array("_id" => $id);
+			$userProfile = $userCollection->findOne($temp);
+			
+			
+
+				
+			if(is_null($userProfile))
+				$this->returnJson(0, "The user did not exist");
+			
+			$result = array('id' => $userProfile['_id'] ->__toString(), 'username' => $userProfile['username'],
+					'isAdmin' => $userProfile['isAdmin'], 'email' => $userProfile['email']);
+			
+			
+			$this->returnJson(1, "Get 1 user profile successfully",$result);
+			
+		}
+		catch (MongoException $e)
+		{
+			$this->returnJson(0, 'Some errors occoured during delete user profile',$e->getMessage());
+		}
+		catch (Zend_Exception $e)
+		{
+			$this->returnJson(0, 'Some errors occoured during delete user profile',$e->getMessage());
+		}
+		
+	}
+	
+	
+	
 	
 	/**
 	 * Author: Shaon
@@ -320,18 +366,20 @@ class UsersController extends My_Center_Controller
 	
 	public function testAction()
 	{
-		$userCollection = new Application_Model_DbCollections_Users();
+// 		$userCollection = new Application_Model_DbCollections_Users();
+
 		
-		var_dump(Zend_Session::getId());
- 		var_dump(Zend_Auth::getInstance()->getStorage()->read());
-// 		$id = new MongoId('550eaca9cec12ad0008b4567');
-// 		$result = $userCollection->findone( array("_id" => $id));
-		
-		
-// 		echo $result['_id']."\n";
-// 		foreach($result as $item)
-// 		{
-// 			echo $item;
-// 		}
+ 		
+//   		var_dump(Zend_Auth::getInstance()->getStorage()->read());
+  		$interestsCollection = new Application_Model_DbCollections_Interests();
+  		$interestsInfo = $interestsCollection -> find(array('speechID' => '550faef111be313074a8399c'),
+  															array('userID' => 1,'created_on' => 1));
+  		//var_dump($interestsInfo);
+  		foreach ($interestsInfo as $item)
+  		{
+  			var_dump($item);
+  		}
+  		
+  		
 	}
 }
