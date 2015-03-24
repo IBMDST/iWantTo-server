@@ -347,7 +347,7 @@ class SpeechesController extends My_Center_Controller
 	 * Author: Shaon
 	 * Create a feedback via userID, speechID, star, comment
 	 * Path: speeches/create-feedback
-	 * Result: return status 1 if insert succefully.
+	 * Result: return status 1 if insert successfully.
 	 *
 	 */
 	public function createFeedbackAction()
@@ -436,7 +436,7 @@ class SpeechesController extends My_Center_Controller
 	 * Author: Shaon
 	 * Delete a feedback
 	 * Path : users/del-feedback
-	 * Result: return status 1 if delete succefully.
+	 * Result: return status 1 if delete successfully.
 	 *
 	 */
 	public function delFeedbackAction()
@@ -598,7 +598,7 @@ class SpeechesController extends My_Center_Controller
 	 * Author: Shaon
 	 * Create a comment via userID, speechID, comment
 	 * Path: speeches/create-comment
-	 * Result: return status 1 if insert succefully.
+	 * Result: return status 1 if insert successfully.
 	 *
 	 */
 	public function createCommentAction()
