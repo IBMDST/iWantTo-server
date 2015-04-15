@@ -132,6 +132,7 @@ class SpeechesController extends My_Center_Controller
 								$this->returnJson(0, "The speech did not exist");
 								
 							$commentsCursor =null;
+							$comments = array();
 							$commentsCursor = $commentsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID' => 0));
 							if($commentsCursor instanceof MongoCursor)
 							{
@@ -150,6 +151,7 @@ class SpeechesController extends My_Center_Controller
 							}
 								
 							$interestsCursor = null;
+							$interests = array();
 							$interestsCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
 							if($interestsCursor instanceof MongoCursor)
 							{
@@ -167,6 +169,7 @@ class SpeechesController extends My_Center_Controller
 							}
 							
 							$feedbacksCursor = null;
+							$feedbacks = array();
 							$feedbacksCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
 							if($feedbacksCursor instanceof MongoCursor)
 							{
