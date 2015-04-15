@@ -91,13 +91,13 @@ class SpeechesController extends My_Center_Controller
 									$userInfo = $usersCollection->findOne(array('_id' => new MongoId($item['speakerID'])));
 		
 										
-									$temp = array('id' => $item['_id'] ->__toString(), 'speakerID' => $item['speakerID'],
+									$tempSpeech = array('id' => $item['_id'] ->__toString(), 'speakerID' => $item['speakerID'],
 											'subject' => $item['subject'],'description'=>$item['description'],'when'=>$item['when'],
 											'where' => $item['where'],
 											'createdOn' => $item['createdOn']->sec,
 											'comments'  => $comments,'interests' => $interests, 'feedbacks'=>$feedbacks,'fixed' => $item['fixed'],
 											'speakerName' => $userInfo['username']);
-									$result[] = $temp;
+									$result[] = $tempSpeech;
 								}
 						
 								$this->returnJson(200, "Get all speeches successfully", $result);
