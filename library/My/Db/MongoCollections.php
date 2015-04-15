@@ -10,8 +10,21 @@ class My_Db_MongoCollections extends MongoCollection
 		if(!Zend_Registry::isRegistered('dbconn'))
 		{
 			try {
-				$conn = new My_Db_MongoDb();
-				$db = $conn -> selectDB('iwant');
+				//mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db
+				
+				$connectionString = "mongodb://";
+				
+				if (!isset($GLOBALS['application']->getOptions()['db']['params']['username']) )
+				{
+					$connectionString .= $GLOBALS['application']->getOptions()['db']['params']['username'].
+					$GLOBALS['application']->getOptions()['db']['params']['password']."@";
+				}
+				
+				$connectionString.= $GLOBALS['application']->getOptions()['db']['params']['host'].':'.
+						$GLOBALS['application']->getOptions()['db']['params']['port'];
+				
+				$conn = new My_Db_MongoDb($connectionString);
+				$db = $conn -> selectDB($GLOBALS['application']->getOptions()['db']['params']['dbname']);
 			}
 			catch (Exception $e)
 			{
