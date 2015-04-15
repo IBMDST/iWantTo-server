@@ -114,12 +114,22 @@ class UsersController extends My_Center_Controller
 							$this->returnJson(400, 'Insert action failed');
 						}
 						
-						$userTemp = $userCollection -> findOne(array('username' => $username));
-						$user['uid'] = $userTemp['_id']->__toString();
-						$user['username'] = $userTemp['username'];
-						$user['createdOn'] = $userTemp['createdOn']->sec;
-						$user['isAdmin']= $userTemp['isAdmin'];
-						$user['email']= $userTemp['email'];
+						$authAdapter = new My_Auth_Auth($username, $password);
+						$loginResult = $authAdapter->authenticate();
+						if($loginResult -> isValid())
+						{
+							$userTemp = $userCollection -> findOne(array('username' => $username));
+							$user['uid'] = $userTemp['_id']->__toString();
+							$user['username'] = $userTemp['username'];
+							$user['createdOn'] = $userTemp['createdOn']->sec;
+							$user['isAdmin']= $userTemp['isAdmin'];
+							$user['email']= $userTemp['email'];
+						
+							$this->returnJson(200, 'login successfully',$user);
+							//$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
+						}
+						
+
 							
 						$this->returnJson(200, 'Insert successfully',$user);
 							
@@ -175,7 +185,7 @@ class UsersController extends My_Center_Controller
 					$user['isAdmin']= $userTemp['isAdmin'];
 					$user['email']= $userTemp['email'];
 						
-					$this->returnJson(200, 'Insert successfully',$user);
+					$this->returnJson(200, 'login successfully',$user);
 // 					$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
 				}
 				else 

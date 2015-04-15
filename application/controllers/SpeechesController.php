@@ -52,7 +52,7 @@ class SpeechesController extends My_Center_Controller
 									
 										
 									$interestsCursor = null;
-									$interestsCursor = $interestsCollection -> find(array('speechID' => $item['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
+									$interestsCursor = $interestsCollection -> find(array('speechID' => $item['_id'] ->__toString()));
 									if($interestsCursor instanceof MongoCursor)
 									{
 										foreach($interestsCursor as $interest)
