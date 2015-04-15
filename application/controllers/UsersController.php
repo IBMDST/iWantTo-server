@@ -81,7 +81,46 @@ class UsersController extends My_Center_Controller
 					}
 					
 				case "POST":
-					$this->returnJson(400, 'error request method');
+					if (!$this->_request->has('username') || !$this->_request->has('password')
+					|| !$this->_request->has('email'))
+					{
+						$this->returnJson(400, 'Parameters error');
+					}
+					
+					$username = $this->_request->getParam('username');
+					$password = md5($this->_request->getParam('password'));
+					$email = $this->_request->getParam('email');
+					
+					$userCollection = new Application_Model_DbCollections_Users();
+					
+					try
+					{
+						$temp = array("username" => $username);
+						$userProfile = $userCollection->findOne($temp);
+							
+						if(isset($userProfile)&&!empty($userProfile))
+							$this->returnJson(400, "The user has already exist");
+							
+							
+						$newUser = array('username' => $username , 'password' => $password, 'isAdmin' => false,
+								'email' => $email, 'createdOn' => new MongoDate(time()));
+							
+						$result = $userCollection->insert($newUser);
+							
+						if(!$result)
+						{
+							$this->returnJson(400, 'Insert action failed');
+						}
+							
+						$this->returnJson(200, 'Insert Successfully',$result);
+							
+							
+					}
+					catch (Zend_Exception $e)
+					{
+						$this->returnJson(500, 'Some errors occoured during create user profile',$e->getMessage());
+					}
+					
 					break;
 				case "PUT":
 					$this->returnJson(400, 'error request method');

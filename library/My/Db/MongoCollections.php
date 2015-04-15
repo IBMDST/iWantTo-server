@@ -7,24 +7,28 @@ class My_Db_MongoCollections extends MongoCollection
 	
 	public function __construct()
 	{
+		$dbConfig = Zend_Registry::get("dbConfigs");
+		var_dump($dbConfig);
+		die();
 		if(!Zend_Registry::isRegistered('dbconn'))
 		{
 			try {
 				//mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db
 				
+				
 				$connectionString = "mongodb://";
 				
-				if (!isset($GLOBALS['application']->getOptions()['db']['params']['username']) )
+				if (!isset($dbConfig['params']['username']) )
 				{
-					$connectionString .= $GLOBALS['application']->getOptions()['db']['params']['username'].
-					$GLOBALS['application']->getOptions()['db']['params']['password']."@";
+					$connectionString .= $dbConfig['params']['username'].
+					$dbConfig['params']['password']."@";
 				}
 				
-				$connectionString.= $GLOBALS['application']->getOptions()['db']['params']['host'].':'.
-						$GLOBALS['application']->getOptions()['db']['params']['port'];
+				$connectionString.= $dbConfig['params']['host'].':'.
+						$dbConfig['params']['port'];
 				
 				$conn = new My_Db_MongoDb($connectionString);
-				$db = $conn -> selectDB($GLOBALS['application']->getOptions()['db']['params']['dbname']);
+				$db = $conn -> selectDB($dbConfig['params']['dbname']);
 			}
 			catch (Exception $e)
 			{

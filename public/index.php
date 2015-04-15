@@ -24,6 +24,10 @@ $application = new Zend_Application(
     APPLICATION_PATH . '/configs/application.ini'
 );
 
+// echo "<pre>";
+// var_dump($application->getBootstrap()->getOption("db"));
+// die();
+
 
 require_once APPLICATION_PATH.'/controllers/Plugin/AuthVerify.php';
 $fc = Zend_Controller_Front::getInstance();

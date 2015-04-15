@@ -12,6 +12,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		)));
 	
 	}
+	
+	protected function _initConfigs(){
+		$dbConfigs = $this->getOptions()["db"];
+		Zend_Registry::set("dbConfigs", $dbConfigs);
+	}
+	
 
 }
 
