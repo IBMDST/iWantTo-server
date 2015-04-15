@@ -18,7 +18,7 @@ class SpeechesController extends My_Center_Controller
 						
 						$speechesCollection = new Application_Model_DbCollections_Speeches();
 						$commentsCollection = new Application_Model_DbCollections_Comments();
-						$interestsCollection = new k();
+						$interestsCollection = new Application_Model_DbCollections_Interests();
 						$feedbacksCollection = new Application_Model_DbCollections_Feedbacks();
 						$usersCollection = new Application_Model_DbCollections_Users();
 						try
