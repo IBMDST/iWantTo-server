@@ -116,8 +116,7 @@ class UsersController extends My_Center_Controller
 						
 						$userTemp = $userCollection -> findOne(array('username' => $username));
 						$user['uid'] = $userTemp['_id']->__toString();
-						$user['username'] = $userTemp['userID'];
-						$user['password'] = $userTemp['speechID'];
+						$user['username'] = $userTemp['username'];
 						$user['createdOn'] = $userTemp['createdOn']->sec;
 						$user['isAdmin']= $userTemp['isAdmin'];
 						$user['email']= $userTemp['email'];
@@ -171,8 +170,7 @@ class UsersController extends My_Center_Controller
 				{
 					$userTemp = $userCollection -> findOne(array('username' => $username));
 					$user['uid'] = $userTemp['_id']->__toString();
-					$user['username'] = $userTemp['userID'];
-					$user['password'] = $userTemp['speechID'];
+					$user['username'] = $userTemp['username'];
 					$user['createdOn'] = $userTemp['createdOn']->sec;
 					$user['isAdmin']= $userTemp['isAdmin'];
 					$user['email']= $userTemp['email'];
