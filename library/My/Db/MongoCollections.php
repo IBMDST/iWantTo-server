@@ -8,8 +8,6 @@ class My_Db_MongoCollections extends MongoCollection
 	public function __construct()
 	{
 		$dbConfig = Zend_Registry::get("dbConfigs");
-		var_dump($dbConfig);
-		die();
 		if(!Zend_Registry::isRegistered('dbconn'))
 		{
 			try {

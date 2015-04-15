@@ -11,9 +11,7 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $dbConfig = Zend_Registry::get("dbConfigs");
-				var_dump($dbConfig);
-				die();
+       
     }
 
 
