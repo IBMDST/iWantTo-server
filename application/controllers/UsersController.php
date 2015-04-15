@@ -106,13 +106,23 @@ class UsersController extends My_Center_Controller
 								'email' => $email, 'createdOn' => new MongoDate(time()));
 							
 						$result = $userCollection->insert($newUser);
+						
+						
 							
 						if(!$result)
 						{
 							$this->returnJson(400, 'Insert action failed');
 						}
+						
+						$userTemp = $userCollection -> findOne(array('username' => $username));
+						$user['uid'] = $userTemp['_id']->__toString();
+						$user['username'] = $userTemp['userID'];
+						$user['password'] = $userTemp['speechID'];
+						$user['createdOn'] = $userTemp['createdOn']->sec;
+						$user['isAdmin']= $userTemp['isAdmin'];
+						$user['email']= $userTemp['email'];
 							
-						$this->returnJson(200, 'Insert Successfully',$result);
+						$this->returnJson(200, 'Insert successfully',$user);
 							
 
 							
@@ -146,7 +156,8 @@ class UsersController extends My_Center_Controller
 		if($this->_request->getMethod() == 'POST')
 		{
 			$username = $this->_request->getParam('username');
-			$password = $this->_request->getParam('password');		
+			$password = $this->_request->getParam('password');	
+			$userCollection = new Application_Model_DbCollections_Users();	
 			try 
 			{
 
@@ -158,7 +169,16 @@ class UsersController extends My_Center_Controller
 				$loginResult = $authAdapter->authenticate();
 				if($loginResult -> isValid())
 				{
-					$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
+					$userTemp = $userCollection -> findOne(array('username' => $username));
+					$user['uid'] = $userTemp['_id']->__toString();
+					$user['username'] = $userTemp['userID'];
+					$user['password'] = $userTemp['speechID'];
+					$user['createdOn'] = $userTemp['createdOn']->sec;
+					$user['isAdmin']= $userTemp['isAdmin'];
+					$user['email']= $userTemp['email'];
+						
+					$this->returnJson(200, 'Insert successfully',$user);
+// 					$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
 				}
 				else 
 				{

@@ -55,7 +55,17 @@ class SpeechesController extends My_Center_Controller
 									$interestsCursor = $interestsCollection -> find(array('speechID' => $item['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
 									if($interestsCursor instanceof MongoCursor)
 									{
-										$interestsInfo = iterator_to_array($interestsCursor);
+										foreach($interestsCursor as $interest)
+										{
+											$temp["userID"] =  $interest['userID'];
+											$temp["speechID"] =  $interest['speechID'];
+											$temp["createdOn"] =  $interest['createdOn']->sec;
+											$temp["id"] =  $interest['_id']->__toString();
+											$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($interest['userID'])))['username'];;
+											
+											$interests[] = $temp;
+											
+										}
 									}
 									
 									$feedbacksCursor = null;
@@ -84,7 +94,7 @@ class SpeechesController extends My_Center_Controller
 											'subject' => $item['subject'],'description'=>$item['description'],'when'=>$item['when'],
 											'where' => $item['where'],
 											'createdOn' => $item['createdOn']->sec,
-											'comments'  => $comments,'interests' => $interestsInfo, 'feedbacks'=>$feedbacks,'fixed' => $item['fixed'],
+											'comments'  => $comments,'interests' => $interests, 'feedbacks'=>$feedbacks,'fixed' => $item['fixed'],
 											'speakerName' => $userInfo['username']);
 									$result[] = $temp;
 								}
@@ -123,18 +133,54 @@ class SpeechesController extends My_Center_Controller
 							$commentsCursor =null;
 							$commentsCursor = $commentsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID' => 0));
 							if($commentsCursor instanceof MongoCursor)
-								$commentsInfo = iterator_to_array($commentsCursor);
+							{
+								foreach($commentsCursor as $comment)
+								{
+									$temp["userID"] =  $comment['userID'];
+									$temp["speechID"] =  $comment['speechID'];
+									$temp["createdOn"] =  $comment['createdOn']->sec;
+									$temp["comment"] =  $comment['comment'];
+									$temp["id"] =  $comment['_id']->__toString();
+									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($comment['userID'])))['username'];;
+										
+									$comments[] = $temp;
+										
+								}
+							}
 								
 							$interestsCursor = null;
 							$interestsCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
 							if($interestsCursor instanceof MongoCursor)
-								$interestsInfo = iterator_to_array($interestsCursor);
+							{
+								foreach($interestsCursor as $interest)
+								{
+									$temp["userID"] =  $interest['userID'];
+									$temp["speechID"] =  $interest['speechID'];
+									$temp["createdOn"] =  $interest['createdOn']->sec;
+									$temp["id"] =  $interest['_id']->__toString();
+									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($interest['userID'])))['username'];;
+										
+									$interests[] = $temp;
+										
+								}
+							}
 							
 							$feedbacksCursor = null;
 							$feedbacksCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
 							if($feedbacksCursor instanceof MongoCursor)
 							{
-								$feedbacksCursor = iterator_to_array($interestsCursor);
+								foreach ($feedbacksCursor as $feedback)
+								{
+									$temp["userID"] =  $feedback['userID'];
+									$temp["stars"] =  $feedback['star'];
+									$temp["speechID"] =  $feedback['speechID'];
+									$temp["createdOn"] =  $feedback['createdOn']->sec;
+									$temp["comment"] =  $feedback['comment'];
+									$temp["id"] =  $feedback['_id']->__toString();
+									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($feedback['userID'])))['username'];;
+								
+									$feedbacks[] = $temp;
+								}
 							}
 								
 							$userInfo = $usersCollection->findOne(array('_id' => new MongoId($speechInfo['speakerID'])));
@@ -144,7 +190,7 @@ class SpeechesController extends My_Center_Controller
 											'subject' => $speechInfo['subject'],'description'=>$speechInfo['description'],'when'=>$speechInfo['when'],
 											'where' => $speechInfo['where'],
 											'createdOn' => $speechInfo['createdOn']->sec,
-											'comment'  => $commentsInfo,'interests' => $interestsInfo, 'fixed' => $speechInfo['fixed'],
+											'comment'  => $comments,'interests' => $interests, 'feedbacks'=>$feedbacks ,'fixed' => $speechInfo['fixed'],
 											'speakerName' => $userInfo['username']);
 						
 
