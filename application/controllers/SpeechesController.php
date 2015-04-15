@@ -18,7 +18,7 @@ class SpeechesController extends My_Center_Controller
 						
 						$speechesCollection = new Application_Model_DbCollections_Speeches();
 						$commentsCollection = new Application_Model_DbCollections_Comments();
-						$interestsCollection = new Application_Model_DbCollections_Interests();
+						$interestsCollection = new k();
 						$feedbacksCollection = new Application_Model_DbCollections_Feedbacks();
 						$usersCollection = new Application_Model_DbCollections_Users();
 						try
@@ -38,14 +38,14 @@ class SpeechesController extends My_Center_Controller
 									{
 										foreach($commentsCursor as $comment)
 										{
-											$temp["userID"] =  $comment['userID'];
-											$temp["speechID"] =  $comment['speechID'];
-											$temp["createdOn"] =  $comment['createdOn']->sec;
-											$temp["comment"] =  $comment['comment'];
-											$temp["id"] =  $comment['_id']->__toString();
-											$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($comment['userID'])))['username'];;
+											$tempComent["userID"] =  $comment['userID'];
+											$tempComent["speechID"] =  $comment['speechID'];
+											$tempComent["createdOn"] =  $comment['createdOn']->sec;
+											$tempComent["comment"] =  $comment['comment'];
+											$tempComent["id"] =  $comment['_id']->__toString();
+											$tempComent['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($comment['userID'])))['username'];;
 											
-											$comments[] = $temp;
+											$comments[] = $tempComent;
 											
 										}
 									}
@@ -58,13 +58,13 @@ class SpeechesController extends My_Center_Controller
 									{
 										foreach($interestsCursor as $interest)
 										{
-											$temp["userID"] =  $interest['userID'];
-											$temp["speechID"] =  $interest['speechID'];
-											$temp["createdOn"] =  $interest['createdOn']->sec;
-											$temp["id"] =  $interest['_id']->__toString();
-											$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($interest['userID'])))['username'];;
+											$tempinterest["userID"] =  $interest['userID'];
+											$tempinterest["speechID"] =  $interest['speechID'];
+											$tempinterest["createdOn"] =  $interest['createdOn']->sec;
+											$tempinterest["id"] =  $interest['_id']->__toString();
+											$tempinterest['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($interest['userID'])))['username'];;
 											
-											$interests[] = $temp;
+											$interests[] = $tempinterest;
 											
 										}
 									}
@@ -76,15 +76,15 @@ class SpeechesController extends My_Center_Controller
 									{
 										foreach ($feedbacksCursor as $feedback)
 										{			
-											$temp["userID"] =  $feedback['userID'];
-											$temp["stars"] =  $feedback['star'];
-											$temp["speechID"] =  $feedback['speechID'];
-											$temp["createdOn"] =  $feedback['createdOn']->sec;
-											$temp["comment"] =  $feedback['comment'];
-											$temp["id"] =  $feedback['_id']->__toString();
-											$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($feedback['userID'])))['username'];;
+											$tempfeedback["userID"] =  $feedback['userID'];
+											$tempfeedback["stars"] =  $feedback['star'];
+											$tempfeedback["speechID"] =  $feedback['speechID'];
+											$tempfeedback["createdOn"] =  $feedback['createdOn']->sec;
+											$tempfeedback["comment"] =  $feedback['comment'];
+											$tempfeedback["id"] =  $feedback['_id']->__toString();
+											$tempfeedback['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($feedback['userID'])))['username'];;
 											 
-											$feedbacks[] = $temp;
+											$feedbacks[] = $tempfeedback;
 										}
 									}
 									
@@ -138,14 +138,14 @@ class SpeechesController extends My_Center_Controller
 							{
 								foreach($commentsCursor as $comment)
 								{
-									$temp["userID"] =  $comment['userID'];
-									$temp["speechID"] =  $comment['speechID'];
-									$temp["createdOn"] =  $comment['createdOn']->sec;
-									$temp["comment"] =  $comment['comment'];
-									$temp["id"] =  $comment['_id']->__toString();
-									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($comment['userID'])))['username'];;
+									$tempcomment["userID"] =  $comment['userID'];
+									$tempcomment["speechID"] =  $comment['speechID'];
+									$tempcomment["createdOn"] =  $comment['createdOn']->sec;
+									$tempcomment["comment"] =  $comment['comment'];
+									$tempcomment["id"] =  $comment['_id']->__toString();
+									$tempcomment['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($comment['userID'])))['username'];;
 										
-									$comments[] = $temp;
+									$comments[] = $tempcomment;
 										
 								}
 							}
@@ -157,13 +157,13 @@ class SpeechesController extends My_Center_Controller
 							{
 								foreach($interestsCursor as $interest)
 								{
-									$temp["userID"] =  $interest['userID'];
-									$temp["speechID"] =  $interest['speechID'];
-									$temp["createdOn"] =  $interest['createdOn']->sec;
-									$temp["id"] =  $interest['_id']->__toString();
-									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($interest['userID'])))['username'];;
+									$tempinterest["userID"] =  $interest['userID'];
+									$tempinterest["speechID"] =  $interest['speechID'];
+									$tempinterest["createdOn"] =  $interest['createdOn']->sec;
+									$tempinterest["id"] =  $interest['_id']->__toString();
+									$tempinterest['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($interest['userID'])))['username'];;
 										
-									$interests[] = $temp;
+									$interests[] = $tempinterest;
 										
 								}
 							}
@@ -175,15 +175,15 @@ class SpeechesController extends My_Center_Controller
 							{
 								foreach ($feedbacksCursor as $feedback)
 								{
-									$temp["userID"] =  $feedback['userID'];
-									$temp["stars"] =  $feedback['star'];
-									$temp["speechID"] =  $feedback['speechID'];
-									$temp["createdOn"] =  $feedback['createdOn']->sec;
-									$temp["comment"] =  $feedback['comment'];
-									$temp["id"] =  $feedback['_id']->__toString();
-									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($feedback['userID'])))['username'];;
+									$tempfeedback["userID"] =  $feedback['userID'];
+									$tempfeedback["stars"] =  $feedback['star'];
+									$tempfeedback["speechID"] =  $feedback['speechID'];
+									$tempfeedback["createdOn"] =  $feedback['createdOn']->sec;
+									$tempfeedback["comment"] =  $feedback['comment'];
+									$tempfeedback["id"] =  $feedback['_id']->__toString();
+									$tempfeedback['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($feedback['userID'])))['username'];;
 								
-									$feedbacks[] = $temp;
+									$feedbacks[] = $tempfeedback;
 								}
 							}
 								
