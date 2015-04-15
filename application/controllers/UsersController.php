@@ -2,61 +2,140 @@
 
 class UsersController extends My_Center_Controller
 {
+	
+	public function indexAction()
+	{
+		try 
+		{
+			$method = $this->_request->getMethod();
+			switch ($method)
+			{
+				case "GET":
+					if (count($_GET) == 0)
+					{
+						$result = array();
+						
+						//init fields
+						$fields = array('_id' => 1,'username' => 1,'isAdmin' => 1,'email' => 1);
+						$userCollection = new Application_Model_DbCollections_Users();
+						try
+						{	
+							$cursor = $userCollection->find(array(), $fields);
+							if ($cursor instanceof MongoCursor)
+							{//Check the return result
+								$usersProfile = iterator_to_array($cursor);
+						
+								foreach ($usersProfile as $item)
+								{
+										
+									$temp = array('id' => $item['_id'] ->__toString(), 'username' => $item['username'],
+											'isAdmin' => $item['isAdmin'], 'email' => $item['email']);
+									$result[] = $temp;
+								}
+						
+								$this->returnJson(200, "Get all users profiles successfully", $result);
+							}
+							else
+							{
+								$this->returnJson(200, 'no available data');
+							}
+						
+								
+						}
+						catch (Zend_Exception $e)
+						{
+							$this->returnJson(500, 'Some errors occoured during get user profiles'.$e->getMessage());
+						}
+						
+					}
+					
+					if (count($_GET) == 1 && $this->_request->has('id'))
+					{
+						$userCollection = new Application_Model_DbCollections_Users();
+						
+						try
+						{
+							$id = new MongoId($this->_request->getParam('id'));
+							$temp = array("_id" => $id);
+							$userProfile = $userCollection->findOne($temp);
+								
+							if(is_null($userProfile))
+								$this->returnJson(0, "The user did not exist");
+								
+							$result = array('id' => $userProfile['_id'] ->__toString(), 'username' => $userProfile['username'],
+									'isAdmin' => $userProfile['isAdmin'], 'email' => $userProfile['email']);
+								
+								
+							$this->returnJson(1, "Get 1 user profile successfully",$result);
+								
+						}
+						catch (MongoException $e)
+						{
+							$this->returnJson(0, 'Please input the correct user id format');
+						}
+						catch (Zend_Exception $e)
+						{
+							$this->returnJson(0, 'Some errors occoured during get 1 user profile',$e->getMessage());
+						}
+						
+					}
+					
+				case "POST":
+					$this->returnJson(400, 'error request method');
+					break;
+				case "PUT":
+					$this->returnJson(400, 'error request method');
+					break;
+				case "DELETE":
+					$this->returnJson(400, 'error request method');
+					break;
+				default:
+					$this->returnJson(400, 'error request method');
+			}
+		}
+		catch (Zend_Exception $e)
+		{
+			$this->returnJson(0, 'Sorry System has some issues',$e->getMessage());
+		}
+	}
+	
+	
 	public function loginAction()
 	{
 
-			
-	
-		if($this->_request->getMethod() == 'GET')
+		if($this->_request->getMethod() == 'POST')
 		{
-
-			
-// 			if (!$this->_request->has('username') || !$this->_request->has('password') ) 
-// 			{
-// 				$this->returnJson(0, 'Please login first');
-// 			}
-			
-			
-			
 			$username = $this->_request->getParam('username');
-			$password = $this->_request->getParam('password');
-			
-			
+			$password = $this->_request->getParam('password');		
 			try 
 			{
+
 				if (Zend_Auth::getInstance()->hasIdentity()) 
 				{
-					$this->returnJson(1, "You have already login");
-				}
-				
-				
+					$this->returnJson(200, "You have already login");
+				}			
 				$authAdapter = new My_Auth_Auth($username, $password);
 				$loginResult = $authAdapter->authenticate();
 				if($loginResult -> isValid())
 				{
-					$this->returnJson(1, 'Login Successfully');
+					$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
 				}
 				else 
 				{
-					$this->returnJson(0, '请检查用户名密码');
+					$this->returnJson(401,"Pleas check the user name and pasword");
 				}
 			}
 			catch (Zend_Auth_Exception $e)
 			{
-				$this->returnJson(0, 'Sorry System has some issues during the auth processing',$e->getMessage());
+				$this->returnJson(500, 'Sorry System has some issues during the auth processing'.$e->getMessage());
 			}
 			catch (Zend_Exception $e)
 			{
-				$this->returnJson(0, 'Sorry System has some issues',$e->getMessage());
+				$this->returnJson(500, 'Sorry System has some issues'.$e->getMessage());
 			}
-			
-			
 
 		}
 		
-		
-		
-	
 	}
 	
 	
@@ -65,18 +144,18 @@ class UsersController extends My_Center_Controller
 	{
 		if(!$this->_request->getMethod() == "GET")
 		{
-			$this->returnJson(0, "Please use the right request method");
+			$this->returnJson(400, "Please use the right request method");
 		}
 		
 		try 
 		{
 			Zend_Session::destroy();
 		
-			$this->returnJson(1, "Logout successfully");
+			$this->returnJson(200, "Logout successfully");
 		}
 		catch (Zend_Session_Exception $e)
 		{
-			$this->returnJson(0, "Logout failed");
+			$this->returnJson(500, "Logout failed");
 		}
 		catch (Zend_Exception $e)
 		{
@@ -146,7 +225,7 @@ class UsersController extends My_Center_Controller
 		{
 			$this->returnJson(0, "Please use the right request method");
 		}
-	if (!$this->_request->has('id'))
+		if (!$this->_request->has('id'))
 		{
 			$this->returnJson(0, 'Parameters error');
 		}
@@ -222,7 +301,7 @@ class UsersController extends My_Center_Controller
 			
 			
 			$newUser = array('username' => $username , 'password' => $password, 'isAdmin' => false,
-						'email' => $email, 'created_on' => new MongoDate(time()));
+						'email' => $email, 'createdOn' => new MongoDate(time()));
 			
 			$result = $userCollection->insert($newUser);
 			
@@ -336,7 +415,7 @@ class UsersController extends My_Center_Controller
 				
 				
 			$newUserInfo = array('username' => $userProfile['username'] , 'password' => $password, 'isAdmin' => false,
-					'email' => $email, 'created_on' => new MongoDate(time()));
+					'email' => $email, 'createdOn' => new MongoDate(time()));
 				
 			$result = $userCollection->update($temp,$newUserInfo);
 				
@@ -373,7 +452,7 @@ class UsersController extends My_Center_Controller
 //   		var_dump(Zend_Auth::getInstance()->getStorage()->read());
   		$interestsCollection = new Application_Model_DbCollections_Interests();
   		$interestsInfo = $interestsCollection -> find(array('speechID' => '550faef111be313074a8399c'),
-  															array('userID' => 1,'created_on' => 1));
+  															array('userID' => 1,'createdOn' => 1));
   		//var_dump($interestsInfo);
   		foreach ($interestsInfo as $item)
   		{

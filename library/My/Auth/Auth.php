@@ -42,7 +42,7 @@ class My_Auth_Auth implements Zend_Auth_Adapter_Interface
 						'isAdmin' => $userProfile['isAdmin'], 'email' => $userProfile['email']);
 	            
 	            $storage->write($storageData);
-	            
+	          
 	            $userSession = new Zend_Session_Namespace($userNameSpace);
 	            
 	            $userSession -> id = $userProfile['_id'];

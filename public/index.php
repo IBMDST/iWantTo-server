@@ -27,6 +27,7 @@ $application = new Zend_Application(
 
 require_once APPLICATION_PATH.'/controllers/Plugin/AuthVerify.php';
 $fc = Zend_Controller_Front::getInstance();
+$fc->setParam('useDefaultControllerAlways', true);
 $fc -> registerPlugin(new AuthVerify());
 $application->bootstrap()
             ->run();
