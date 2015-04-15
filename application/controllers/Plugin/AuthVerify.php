@@ -22,7 +22,7 @@ class AuthVerify extends Zend_Controller_Plugin_Abstract
 
 		if (!$this -> _userid )
 		{
-			if(!(($resource =='USERS' && $action =='CREATEUSER')
+			if(!(($resource =='USERS' && $this->_request->getMethod() =='POST')
 				||  ($resource =='USERS' && $action =='LOGIN')))
 			{
 				$controller = 'index';
