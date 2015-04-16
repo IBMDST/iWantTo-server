@@ -113,7 +113,7 @@ class UsersController extends My_Center_Controller
 						{
 							$this->returnJson(400, 'Insert action failed');
 						}
-						
+						$user = array();
 						$authAdapter = new My_Auth_Auth($username, $password);
 						$loginResult = $authAdapter->authenticate();
 						if($loginResult -> isValid())
@@ -169,24 +169,23 @@ class UsersController extends My_Center_Controller
 			$userCollection = new Application_Model_DbCollections_Users();	
 			try 
 			{
+				
+				$userTemp = $userCollection -> findOne(array('username' => $username));
+				$user['uid'] = $userTemp['_id']->__toString();
+				$user['username'] = $userTemp['username'];
+				$user['createdOn'] = $userTemp['createdOn']->sec;
+				$user['isAdmin']= $userTemp['isAdmin'];
+				$user['email']= $userTemp['email'];
 
 				if (Zend_Auth::getInstance()->hasIdentity()) 
 				{
-					$this->returnJson(200, "You have already login");
+					$this->returnJson(200, "You have already login",$user);
 				}			
 				$authAdapter = new My_Auth_Auth($username, $password);
 				$loginResult = $authAdapter->authenticate();
 				if($loginResult -> isValid())
-				{
-					$userTemp = $userCollection -> findOne(array('username' => $username));
-					$user['uid'] = $userTemp['_id']->__toString();
-					$user['username'] = $userTemp['username'];
-					$user['createdOn'] = $userTemp['createdOn']->sec;
-					$user['isAdmin']= $userTemp['isAdmin'];
-					$user['email']= $userTemp['email'];
-						
+				{	
 					$this->returnJson(200, 'login successfully',$user);
-// 					$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
 				}
 				else 
 				{
