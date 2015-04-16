@@ -194,7 +194,7 @@ class SpeechesController extends My_Center_Controller
 											'subject' => $speechInfo['subject'],'description'=>$speechInfo['description'],'when'=>$speechInfo['when'],
 											'where' => $speechInfo['where'],
 											'createdOn' => $speechInfo['createdOn']->sec,
-											'comment'  => $comments,'interests' => $interests, 'feedbacks'=>$feedbacks ,'fixed' => $speechInfo['fixed'],
+											'comments'  => $comments,'interests' => $interests, 'feedbacks'=>$feedbacks ,'fixed' => $speechInfo['fixed'],
 											'speakerName' => $userInfo['username']);
 						
 
