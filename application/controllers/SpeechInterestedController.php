@@ -10,8 +10,89 @@ class SpeechInterestedController extends My_Center_Controller
 			{
 				case "GET":
 					
-					if (!$this -> _request->has('id'))
+					if ($this -> _request->has('userID'))
 					{
+						$interestsCollection = new Application_Model_DbCollections_Interests();
+						
+						try
+						{
+							$id = new MongoId($this->_request->getParam('userID'));
+							$temp = array("userID" => $id);
+							$interestInfo = $interestsCollection->find($temp);
+						
+							if(is_null($interestInfo))
+								$this->returnJson(400, "The user did not exist");
+						
+							$interests = array();
+							if($interestInfo instanceof MongoCursor)
+							{
+								foreach ($interestInfo as $interest)
+								{
+									$tempInterest["userID"] =  $interest['userID'];
+									$tempInterest["speechID"] =  $interest['speechID'];
+									$tempInterest["createdOn"] =  $interest['createdOn']->sec;
+									$tempInterest["id"] =  $interest['_id']->__toString();							
+									$interests[] = $tempInterest;
+								}
+							}
+						
+							$this->returnJson(200, "Get interests successfully",$interests);
+						
+						}
+						catch (MongoException $e)
+						{
+							$this->returnJson(400, 'Please check the userid format'.$e->getMessage());
+						}
+						catch (Zend_Exception $e)
+						{
+							$this->returnJson(500, 'Some errors occoured during get one user interest'.$e->getMessage());
+						}
+						
+						
+					}
+					else if ($this -> _request->has('id'))
+					{
+						$interestsCollection = new Application_Model_DbCollections_Interests();
+						$usersCollection = new Application_Model_DbCollections_Users();
+						try
+						{
+							$id = $this->_request->getParam('id');
+							$temp = array("speechID" => $id);
+							$interestInfo = $interestsCollection->find($temp);
+	
+							$interests = array();
+							if($interestInfo instanceof MongoCursor)
+							{
+								foreach ($interestInfo as $interest)
+								{
+									$tempInterest["userID"] =  $interest['userID'];
+									$tempInterest["speechID"] =  $interest['speechID'];
+									$tempInterest["createdOn"] =  $interest['createdOn']->sec;
+									$tempInterest["id"] =  $interest['_id']->__toString();
+									$tempInterest['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($interest['userID'])))['username'];;
+							
+									$interests[] = $tempInterest;
+								}
+							}
+								
+							if(is_null($interestInfo))
+								$this->returnJson(200, "The feedback did not exist");
+				
+						
+							$this->returnJson(200, "Get interests successfully",$interests);
+								
+						}
+						catch (MongoException $e)
+						{
+							$this->returnJson(400, 'Please check the id format'.$e->getMessage());
+						}
+						catch (Zend_Exception $e)
+						{
+							$this->returnJson(500, 'Some errors occoured during get one speech interest'.$e->getMessage());
+						}
+						
+					}
+					else{
 						$result = array();
 						
 						//init fields
@@ -19,7 +100,7 @@ class SpeechInterestedController extends My_Center_Controller
 						$interestsCollection = new Application_Model_DbCollections_Interests();
 						try
 						{
-	
+						
 							$cursor = $interestsCollection->find();
 							if ($cursor instanceof MongoCursor)
 							{//Check the return result
@@ -27,9 +108,9 @@ class SpeechInterestedController extends My_Center_Controller
 						
 								foreach ($interestinfos as $item)
 								{
-										
+						
 									$temp = array('id' => $item['_id'] ->__toString(), 'userID' => $item['userID'],
-											'speechID' => $item['speechID'], 'createdOn' => $item['createdOn']);
+											'speechID' => $item['speechID'], 'createdOn' => $item['createdOn']->sec);
 									$result[] = $temp;
 								}
 						
@@ -40,40 +121,11 @@ class SpeechInterestedController extends My_Center_Controller
 								$this->returnJson(200, 'no available data');
 							}
 						
-								
+						
 						}
 						catch (Zend_Exception $e)
 						{
 							$this->returnJson(500, 'Some errors occoured during get user interests',$e->getMessage());
-						}
-					}
-					else 
-					{
-						$interestsCollection = new Application_Model_DbCollections_Interests();
-						
-						try
-						{
-							$id = new MongoId($this->_request->getParam('id'));
-							$temp = array("_id" => $id);
-							$interestInfo = $interestsCollection->findOne($temp);
-	
-							if(is_null($interestInfo))
-								$this->returnJson(400, "The user did not exist");
-								
-							$result = array('id' => $interestInfo['_id'] ->__toString(), 'userID' => $interestInfo['userID'],
-									'speechID' => $interestInfo['speechID'], 'createdOn' => $interestInfo['createdOn']);
-								
-								
-							$this->returnJson(200, "Get 1 user interest successfully",$result);
-								
-						}
-						catch (MongoException $e)
-						{
-							$this->returnJson(400, 'Please check the id format'.$e->getMessage());
-						}
-						catch (Zend_Exception $e)
-						{
-							$this->returnJson(500, 'Some errors occoured during get one user interest'.$e->getMessage());
 						}
 						
 					}

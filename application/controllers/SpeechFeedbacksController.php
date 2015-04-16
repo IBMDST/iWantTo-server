@@ -10,7 +10,92 @@ class SpeechFeedbacksController extends My_Center_Controller
 			switch ($method)
 			{
 				case "GET":
-					if($this->_request->has('id'))
+					if($this->_request->has('userID'))
+					{
+						$feedbacksCollection = new Application_Model_DbCollections_Feedbacks();
+						
+						try
+						{
+							$id = new MongoId($this->_request->getParam('userID'));
+							$temp = array("userID" => $id);
+							$feedbackInfo = $feedbacksCollection->find($temp);
+						
+							if(is_null($feedbackInfo))
+								$this->returnJson(400, "The user did not exist");
+						
+							$feedbacks = array();
+							if($feedbackInfo instanceof MongoCursor)
+							{
+								foreach ($feedbackInfo as $feedback)
+								{
+									$tempFeedback["userID"] =  $feedback['userID'];
+									$tempFeedback["stars"] =  $feedback['star'];
+									$tempFeedback["speechID"] =  $feedback['speechID'];
+									$tempFeedback["createdOn"] =  $feedback['createdOn']->sec;
+									$tempFeedback["comment"] =  $feedback['comment'];
+									$tempFeedback["id"] =  $feedback['_id']->__toString();
+									
+									$feedbacks[] = $tempFeedback;
+								}
+							}
+						
+							$this->returnJson(200, "Get interests successfully",$feedbacks);
+						
+						}
+						catch (MongoException $e)
+						{
+							$this->returnJson(400, 'Please check the userid format'.$e->getMessage());
+						}
+						catch (Zend_Exception $e)
+						{
+							$this->returnJson(500, 'Some errors occoured during get one user interest'.$e->getMessage());
+						}
+						
+					}
+					else if($this->_request->has('id'))
+					{
+					
+						$feedbacksCollection = new Application_Model_DbCollections_Feedbacks();
+						$usersCollection = new Application_Model_DbCollections_Users();
+						try
+						{
+							$id = new MongoId($this->_request->getParam('id'));
+							$temp = array("speechID" => $id);
+							$feedbacksInfo = $feedbacksCollection->find($temp);
+							
+							$feedbacks = array();
+							if($feedbacksInfo instanceof MongoCursor)
+							{
+								foreach ($feedbacksInfo as $feedback)
+								{
+									$tempFeedback["userID"] =  $feedback['userID'];
+									$tempFeedback["stars"] =  $feedback['star'];
+									$tempFeedback["speechID"] =  $feedback['speechID'];
+									$tempFeedback["createdOn"] =  $feedback['createdOn']->sec;
+									$tempFeedback["comment"] =  $feedback['comment'];
+									$tempFeedback["id"] =  $feedback['_id']->__toString();
+									$tempFeedback['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($feedback['userID'])))['username'];;
+							
+									$feedbacks[] = $tempFeedback;
+								}
+							}
+
+							if(is_null($feedbacksInfo))
+								$this->returnJson(200, "The feedback did not exist");
+				
+							$this->returnJson(200, "Get 1 user feedback successfully",$feedbacks);
+						
+						}
+						catch (MongoException $e)
+						{
+							$this->returnJson(400, 'Please check the id format'.$e->getMessage());
+						}
+						catch (Zend_Exception $e)
+						{
+							$this->returnJson(500, 'Some errors occoured during get one user feedback'.$e->getMessage());
+						}
+					}
+					else
 					{
 						$feedbacksCollection = new Application_Model_DbCollections_Feedbacks();
 						try
@@ -42,49 +127,7 @@ class SpeechFeedbacksController extends My_Center_Controller
 						{
 							$this->returnJson(500, 'Some errors occoured during get user feedbacks',$e->getMessage());
 						}
-					}
-					else 
-					{
-					
-						$feedbacksCollection = new Application_Model_DbCollections_Feedbacks();
-						$usersCollection = new Application_Model_DbCollections_Users();
-						try
-						{
-							$id = new MongoId($this->_request->getParam('id'));
-							$temp = array("speechID" => $id);
-							$feedbacksInfo = $feedbacksCollection->find($temp);
-							
-							$feedbacks = array();
-							if($feedbacksInfo instanceof MongoCursor)
-							{
-								foreach ($feedbacksInfo as $feedback)
-								{
-									$temp["userID"] =  $feedback['userID'];
-									$temp["stars"] =  $feedback['star'];
-									$temp["speechID"] =  $feedback['speechID'];
-									$temp["createdOn"] =  $feedback['createdOn']->sec;
-									$temp["comment"] =  $feedback['comment'];
-									$temp["id"] =  $feedback['_id']->__toString();
-									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($feedback['userID'])))['username'];;
-							
-									$feedbacks[] = $temp;
-								}
-							}
-
-							if(is_null($feedbacksInfo))
-								$this->returnJson(200, "The feedback did not exist");
-				
-							$this->returnJson(200, "Get 1 user feedback successfully",$feedbacks);
 						
-						}
-						catch (MongoException $e)
-						{
-							$this->returnJson(400, 'Please check the id format'.$e->getMessage());
-						}
-						catch (Zend_Exception $e)
-						{
-							$this->returnJson(500, 'Some errors occoured during get one user feedback'.$e->getMessage());
-						}
 					}
 					break;
 	
@@ -148,7 +191,7 @@ class SpeechFeedbacksController extends My_Center_Controller
 						}
 					
 						
-						$feedbackTemp = $feedbackCollection -> findOne(array('speechID' => $speechID,'userID' => $userID));
+						$feedbackTemp = $feedbacksCollection -> findOne(array('speechID' => $speechID,'userID' => $userID));
 						$feedback['id'] = $feedbackTemp['_id']->__toString();
 						$feedback['userID'] = $feedbackTemp['userID'];
 						$feedback['speechID'] = $feedbackTemp['speechID'];

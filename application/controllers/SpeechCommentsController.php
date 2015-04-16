@@ -65,14 +65,14 @@ class SpeechCommentsController extends My_Center_Controller
 							{
 								foreach($commentInfo as $comment)
 								{
-									$temp["userID"] =  $comment['userID'];
-									$temp["speechID"] =  $comment['speechID'];
-									$temp["createdOn"] =  $comment['createdOn']->sec;
-									$temp["comment"] =  $comment['comment'];
-									$temp["id"] =  $comment['_id']->__toString();
-									$temp['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($comment['userID'])))['username'];;
+									$tempComment["userID"] =  $comment['userID'];
+									$tempComment["speechID"] =  $comment['speechID'];
+									$tempComment["createdOn"] =  $comment['createdOn']->sec;
+									$tempComment["comment"] =  $comment['comment'];
+									$tempComment["id"] =  $comment['_id']->__toString();
+									$tempComment['userName'] =  $usersCollection->findOne(array('_id' => new MongoId($comment['userID'])))['username'];;
 										
-									$comments[] = $temp;
+									$comments[] = $tempComment;
 										
 								}
 							}
