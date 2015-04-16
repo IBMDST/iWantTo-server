@@ -114,7 +114,7 @@ class UsersController extends My_Center_Controller
 							$this->returnJson(400, 'Insert action failed');
 						}
 						$user = array();
-						$authAdapter = new My_Auth_Auth($username, $password);
+						$authAdapter = new My_Auth_Auth($username, md5($password));
 						$loginResult = $authAdapter->authenticate();
 						if($loginResult -> isValid())
 						{
