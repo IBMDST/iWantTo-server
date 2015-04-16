@@ -170,7 +170,7 @@ class SpeechesController extends My_Center_Controller
 							
 							$feedbacksCursor = null;
 							$feedbacks = array();
-							$feedbacksCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()));
+							$feedbacksCursor = $feedbacksCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()));
 							if($feedbacksCursor instanceof MongoCursor)
 							{
 								foreach ($feedbacksCursor as $feedback)
