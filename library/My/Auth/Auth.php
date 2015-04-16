@@ -23,7 +23,7 @@ class My_Auth_Auth implements Zend_Auth_Adapter_Interface
         
           
         $userProfile = $this->_getUserInfo();
-		
+	
         try 
         {
 	        if(isset($userProfile)&&!empty($userProfile))

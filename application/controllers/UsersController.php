@@ -113,8 +113,10 @@ class UsersController extends My_Center_Controller
 							$this->returnJson(400, 'Insert action failed');
 						}
 						$user = array();
-						$authAdapter = new My_Auth_Auth($username, md5($password));
+						$authAdapter = new My_Auth_Auth($username, $this->_request->getParam('password'));
+						
 						$loginResult = $authAdapter->authenticate();
+					
 						if($loginResult -> isValid())
 						{
 							$userTemp = $userCollection -> findOne(array('username' => $username));
@@ -126,8 +128,7 @@ class UsersController extends My_Center_Controller
 							
 							//$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
 						}
-						echo 111;
-						var_dump($userTemp = $userCollection -> findOne(array('username' => $username)););
+					
 						$this->returnJson(200, 'login successfully',$user);
 
 							
