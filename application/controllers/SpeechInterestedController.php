@@ -16,7 +16,7 @@ class SpeechInterestedController extends My_Center_Controller
 						
 						try
 						{
-							$id = new MongoId($this->_request->getParam('userID'));
+							$id = $this->_request->getParam('userID');
 							$temp = array("userID" => $id);
 							$interestInfo = $interestsCollection->find($temp);
 						
