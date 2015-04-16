@@ -127,7 +127,7 @@ class UsersController extends My_Center_Controller
 							//$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
 						}
 						echo 111;
-						var_dump($user);
+						var_dump($userTemp = $userCollection -> findOne(array('username' => $username)););
 						$this->returnJson(200, 'login successfully',$user);
 
 							
