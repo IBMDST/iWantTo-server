@@ -124,14 +124,10 @@ class UsersController extends My_Center_Controller
 							$user['createdOn'] = $userTemp['createdOn']->sec;
 							$user['isAdmin']= $userTemp['isAdmin'];
 							$user['email']= $userTemp['email'];
-						
+							var_dump($user);
 							$this->returnJson(200, 'login successfully',$user);
 							//$this->returnJson(200, 'Login successfully',array('uid'=>Zend_Auth::getInstance()->getStorage()->read()['id']));
 						}
-						
-
-							
-						$this->returnJson(200, 'Insert successfully',$user);
 							
 
 							
