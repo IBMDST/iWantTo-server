@@ -13,11 +13,13 @@ class SpeechInterestedController extends My_Center_Controller
 					if ($this -> _request->has('userID'))
 					{
 						$interestsCollection = new Application_Model_DbCollections_Interests();
-						
 						try
 						{
 							$id = $this->_request->getParam('userID');
 							$temp = array("userID" => $id);
+							if($this->_request->has('speechID'))
+								$temp ['speechID']= $this->_request->getParam('speechID');
+
 							$interestInfo = $interestsCollection->find($temp);
 						
 							if(is_null($interestInfo))

@@ -100,6 +100,7 @@ class SpeechFeedbacksController extends My_Center_Controller
 						$feedbacksCollection = new Application_Model_DbCollections_Feedbacks();
 						try
 						{
+							$result = array();
 							$cursor = $feedbacksCollection->find();
 							if ($cursor instanceof MongoCursor)
 							{//Check the return result
