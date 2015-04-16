@@ -133,7 +133,7 @@ class SpeechesController extends My_Center_Controller
 								
 							$commentsCursor =null;
 							$comments = array();
-							$commentsCursor = $commentsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID' => 0));
+							$commentsCursor = $commentsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()));
 							if($commentsCursor instanceof MongoCursor)
 							{
 								foreach($commentsCursor as $comment)
@@ -152,7 +152,7 @@ class SpeechesController extends My_Center_Controller
 								
 							$interestsCursor = null;
 							$interests = array();
-							$interestsCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
+							$interestsCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()));
 							if($interestsCursor instanceof MongoCursor)
 							{
 								foreach($interestsCursor as $interest)
@@ -170,7 +170,7 @@ class SpeechesController extends My_Center_Controller
 							
 							$feedbacksCursor = null;
 							$feedbacks = array();
-							$feedbacksCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()),array('_id' => 0,'speechID'=>0));
+							$feedbacksCursor = $interestsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()));
 							if($feedbacksCursor instanceof MongoCursor)
 							{
 								foreach ($feedbacksCursor as $feedback)
