@@ -92,7 +92,7 @@ class SpeechesController extends My_Center_Controller
 		
 										
 									$tempSpeech = array('id' => $item['_id'] ->__toString(), 'speakerID' => $item['speakerID'],
-											'subject' => $item['subject'],'description'=>$item['description'],'when'=>$item['when'],
+											'subject' => $item['subject'],'description'=>$item['description'],'when'=>is_null($item['when'])?null:$item['when']->sec,
 											'where' => $item['where'],
 											'createdOn' => $item['createdOn']->sec,
 											'comments'  => $comments,'interests' => $interests, 'feedbacks'=>$feedbacks,'fixed' => $item['fixed'],
@@ -191,7 +191,7 @@ class SpeechesController extends My_Center_Controller
 						
 								
 							$result = array('id' => $speechInfo['_id'] ->__toString(), 'speakerID' => $speechInfo['speakerID'],
-											'subject' => $speechInfo['subject'],'description'=>$speechInfo['description'],'when'=>$speechInfo['when'],
+											'subject' => $speechInfo['subject'],'description'=>$speechInfo['description'],'when'=>is_null($speechInfo['when'])?null:$speechInfo['when']->sec,
 											'where' => $speechInfo['where'],
 											'createdOn' => $speechInfo['createdOn']->sec,
 											'comments'  => $comments,'interests' => $interests, 'feedbacks'=>$feedbacks ,'fixed' => $speechInfo['fixed'],
