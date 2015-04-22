@@ -15,6 +15,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	
 	protected function _initConfigs(){
 		$dbConfigs = $this->getOptions()["db"];
+		$mailServerConfigs = $this->getOptions()['mail'];
+		Zend_Registry::set("mailConfigs", $mailServerConfigs);
 		Zend_Registry::set("dbConfigs", $dbConfigs);
 	}
 	

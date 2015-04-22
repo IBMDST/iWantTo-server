@@ -272,23 +272,19 @@ class SpeechesController extends My_Center_Controller
 					break;
 				case "PUT":
 
-					if (!$this->_request->has('id') || !$this->_request->has('subject')
-					|| !$this->_request->has('description') )
+					if (!$this->_request->has('id'))
 					{
 						$this->returnJson(400, 'Parameters error');
 					}
 					
 					
 					$id = $this->_request->getParam('id');
-					$subject = $this->_request->getParam('subject');;
-					$description = $this->_request->getParam('description');
-					$when = ($this->_request->has('when'))?$this->_request->getParam('when'):null;
-					$where = ($this->_request->has('where'))?$this->_request->getParam('where'):null;
-					$fixed = ($this->_request->has('fixed'))?$this->_request->getParam('fiexed'):false;
+					
 					
 					
 					$speechCollection = new Application_Model_DbCollections_Speeches();
 					$userCollection = new Application_Model_DbCollections_Users();
+					$interestsCollection = new Application_Model_DbCollections_Interests();
 					
 					try
 					{
@@ -298,11 +294,38 @@ class SpeechesController extends My_Center_Controller
 						$speechInfo = $speechCollection->findOne($speechTemp);
 						if(is_null($speechInfo))
 							$this->returnJson(400, "The speech did not exist");
+						
+						$subject = ($this->_request->has('subject'))?$this->_request->getParam('subject'):$speechInfo['subject'];
+						$description = ($this->_request->has('description'))?$this->_request->getParam('description'):$speechInfo['description'];
+						$speechInfo['when'];
+						$where = ($this->_request->has('where'))?$this->_request->getParam('where'):$speechInfo['where'];
+						if ($this->_request->has('when'))
+						{
+							$currentTime = Zend_Date::now();	
+							if ($currentTime->compareTimestamp($this->_request->getParam('when')/1000) === 1)
+								$this->returnJson(400, 'bad speech time');
+							$when = new MongoDate($this->_request->getParam('when')/1000);
+						}
+						else 
+							$when = $speechInfo['when'];
+						
+						
+						if($this->_request->has('fixed'))
+						{
+							if ($this->_request->getParam('fixed') == 'true')
+								$fixed = true;
+							else 
+								$fixed = false;
+						}				
+						else 
+						{
+							$fixed = $speechInfo['fixed'];
+						}
 					
-					
+						
 						$speechData = array('subject' => $subject , 'description' => $description,
 								'speakerID' =>  $speechInfo['speakerID'], 'when' => $when,//for test
-								'where' => $where,'fixed' => $fixed,'createdOn' => new MongoDate(time()));
+								'where' => $where,'fixed' => $fixed,'createdOn' => $speechInfo['createdOn']);
 					
 						$result = $speechCollection->update($speechTemp,$speechData);
 					
@@ -310,10 +333,45 @@ class SpeechesController extends My_Center_Controller
 						{
 							$this->returnJson(500, 'Update action failed');
 						}
-					
+						
+						
+						if ($fixed === true)
+						{
+							$interestOfUsers = $interestsCollection->find(array('speechID' => $this->_request->getParam('id')));
+							$config = array('ssl' => 'ssl','port'=>Zend_Registry::getInstance()->get('mailConfigs')['port'],
+								'username' => Zend_Registry::getInstance()->get('mailConfigs')['username'],
+								'password' => Zend_Registry::getInstance()->get('mailConfigs')['password']);
+
+						
+							
+							$transport = new Zend_Mail_Transport_Smtp(Zend_Registry::getInstance()->get('mailConfigs')['host'],$config);
+							Zend_Mail::setDefaultTransport($transport);
+							$mail = new Zend_Mail();
+							$mail->setSubject('Your interested speech will begin');
+							$mail->setFrom(Zend_Registry::getInstance()->get('mailConfigs')['from']);
+							$mail->addTo(Zend_Registry::getInstance()->get('mailConfigs')['from']);
+							foreach ($interestOfUsers as $item)
+							{
+								$userInfo = $userCollection -> findOne(array('_id' => new MongoId($item['userID'])));
+								$mail->addBcc($userInfo['email']);															
+							}
+							
+							$mail->setBodyText('subject : ' .$speechInfo['subject']." \n".'description :'
+									 .$speechInfo['description']);
+							
+							$mail->send();
+									
+							
+						}
+						
+						Zend_Mail::clearDefaultTransport();
 						$this->returnJson(200, 'Update successfully',$result);
 					
 					
+					}
+					catch (Zend_Mail_Exception $e)
+					{
+						$this->returnJson(200, 'Some errors occured during send email'.$e->getMessage());
 					}
 					catch (MongoException $e)
 					{
@@ -375,7 +433,7 @@ class SpeechesController extends My_Center_Controller
 		}
 		catch (Zend_Exception $e)
 		{
-			$this->returnJson(0, 'Sorry System has some issues',$e->getMessage());
+			$this->returnJson(500, 'Sorry System has some issues'.$e->getMessage());
 		}
 	}
 	

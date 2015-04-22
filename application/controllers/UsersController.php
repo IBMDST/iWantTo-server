@@ -214,24 +214,22 @@ class UsersController extends My_Center_Controller
 	
 	public function logoutAction()
 	{
-		if(!$this->_request->getMethod() == "GET")
+		if($this->_request->getMethod() == "POST")
 		{
-			$this->returnJson(400, "Please use the right request method");
+			try 
+			{
+				Zend_Session::destroy();
+			
+				$this->returnJson(200, "Logout successfully");
+			}
+			catch (Zend_Session_Exception $e)
+			{
+				$this->returnJson(500, "Logout failed");
+			}
+			catch (Zend_Exception $e)
+			{
+				$this->returnJson(0, "Logout failed");
 		}
-		
-		try 
-		{
-			Zend_Session::destroy();
-		
-			$this->returnJson(200, "Logout successfully");
-		}
-		catch (Zend_Session_Exception $e)
-		{
-			$this->returnJson(500, "Logout failed");
-		}
-		catch (Zend_Exception $e)
-		{
-			$this->returnJson(0, "Logout failed");
 		}
 		
 		

@@ -67,7 +67,16 @@ class My_Center_Controller extends Zend_Controller_Action
 			
 			if (array_key_exists('subject', $data) && array_key_exists('description', $data) ) {
 				$this->setParam('subject', $data['subject']);
-				$this->setParam('description', $data['description']);;
+				$this->setParam('description', $data['description']);
+				if (array_key_exists('when', $data)) {
+					$this->setParam('when', $data['when']);;
+				}
+				if (array_key_exists('where', $data)) {
+					$this->setParam('where', $data['where']);;
+				}
+				if (array_key_exists('fixed', $data)) {
+					$this->setParam('fixed', $data['fixed']);;
+				}
 			}
 			
 			if (array_key_exists('comment', $data) && array_key_exists('stars', $data)) {
