@@ -24,7 +24,7 @@ class SpeechesController extends My_Center_Controller
 						try
 						{
 						
-							$cursor = $speechesCollection->find();
+							$cursor = $speechesCollection->find()->sort(array('createdOn' => 1));
 							if ($cursor instanceof MongoCursor)
 							{//Check the return result
 								$speechessinfos = iterator_to_array($cursor);
@@ -276,12 +276,9 @@ class SpeechesController extends My_Center_Controller
 					{
 						$this->returnJson(400, 'Parameters error');
 					}
-					
-					
+
 					$id = $this->_request->getParam('id');
-					
-					
-					
+
 					$speechCollection = new Application_Model_DbCollections_Speeches();
 					$userCollection = new Application_Model_DbCollections_Users();
 					$interestsCollection = new Application_Model_DbCollections_Interests();
