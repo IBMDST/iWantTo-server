@@ -24,7 +24,7 @@ class SpeechesController extends My_Center_Controller
 						try
 						{
 						
-							$cursor = $speechesCollection->find()->sort(array('createdOn' => 1));
+							$cursor = $speechesCollection->find()->sort(array('createdOn' => -1));
 							if ($cursor instanceof MongoCursor)
 							{//Check the return result
 								$speechessinfos = iterator_to_array($cursor);
