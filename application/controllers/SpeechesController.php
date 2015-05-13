@@ -357,7 +357,7 @@ class SpeechesController extends My_Center_Controller
 								$mail->addBcc($userInfo['email']);															
 							}
 							
-							$mail->setBodyText('subject : ' .$speechInfo['subject']." \n".'description :'
+							$mail->setBodyHtml('<h3>' .$speechInfo['subject']."</h3> <br/>"
 									 .$speechInfo['description']);
 							
 							$mail->send();
