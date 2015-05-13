@@ -335,18 +335,22 @@ class SpeechesController extends My_Center_Controller
 						if ($fixed === true)
 						{
 							$interestOfUsers = $interestsCollection->find(array('speechID' => $this->_request->getParam('id')));
-							$config = array('ssl' => 'ssl','port'=>Zend_Registry::getInstance()->get('mailConfigs')['port'],
+							$config = array(
+                                'ssl' => 'ssl',
+                                'port'=>Zend_Registry::getInstance()->get('mailConfigs')['port'],
+                                'auth' => "login",
 								'username' => Zend_Registry::getInstance()->get('mailConfigs')['username'],
-								'password' => Zend_Registry::getInstance()->get('mailConfigs')['password']);
+								'password' => Zend_Registry::getInstance()->get('mailConfigs')['password']
+                            );
 
 						
 							
 							$transport = new Zend_Mail_Transport_Smtp(Zend_Registry::getInstance()->get('mailConfigs')['host'],$config);
 							Zend_Mail::setDefaultTransport($transport);
-							$mail = new Zend_Mail();
+							$mail = new Zend_Mail("UTF-8");
 							$mail->setSubject('Your interested speech will begin');
 							$mail->setFrom(Zend_Registry::getInstance()->get('mailConfigs')['from']);
-							$mail->addTo(Zend_Registry::getInstance()->get('mailConfigs')['from']);
+							$mail->addTo("zhouchao@in-sync.co");
 							foreach ($interestOfUsers as $item)
 							{
 								$userInfo = $userCollection -> findOne(array('_id' => new MongoId($item['userID'])));
