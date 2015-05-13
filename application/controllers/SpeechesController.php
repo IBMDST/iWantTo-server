@@ -302,11 +302,10 @@ class SpeechesController extends My_Center_Controller
 							if ($currentTime->compareTimestamp($this->_request->getParam('when')/1000) === 1)
 								$this->returnJson(400, 'bad speech time');
 							$when = new MongoDate($this->_request->getParam('when')/1000);
-						}
-						else 
-							$when = $speechInfo['when'];
-						
-						
+						}else{
+                            $when = $speechInfo['when'];
+                        }
+
 						if($this->_request->has('fixed'))
 						{
 							if ($this->_request->getParam('fixed') == 'true')
