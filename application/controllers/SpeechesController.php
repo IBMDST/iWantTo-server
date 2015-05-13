@@ -360,7 +360,7 @@ class SpeechesController extends My_Center_Controller
 							$mail->setBodyHtml(
                                 '<h3>Subject: ' .$speechInfo['subject']."</h3>"
                                 . '<h3>Where: ' .$speechInfo['where']."</h3>"
-                                . '<h3>When: ' .date("Y-m-d H:i:s", $speechInfo['when']/1000) ."</h3>"
+                                . '<h3>When: ' .date("Y-m-d H:i:s", $speechInfo['when']) ."</h3>"
 							    . $speechInfo['description']
                             );
 							
