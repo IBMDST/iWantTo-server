@@ -357,12 +357,14 @@ class SpeechesController extends My_Center_Controller
 								$mail->addBcc($userInfo['email']);															
 							}
 							
-							$mail->setBodyHtml('<h3>' .$speechInfo['subject']."</h3> <br/>"
-									 .$speechInfo['description']);
+							$mail->setBodyHtml(
+                                '<h3>Subject: ' .$speechInfo['subject']."</h3>"
+                                . '<h3>Where: ' .$speechInfo['where']."</h3>"
+                                . '<h3>When: ' .date("Y-m-d H:i:s", $speechInfo['when']/1000) ."</h3>"
+							    . $speechInfo['description']
+                            );
 							
 							$mail->send();
-									
-							
 						}
 						
 						Zend_Mail::clearDefaultTransport();
