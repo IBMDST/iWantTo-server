@@ -345,24 +345,24 @@ class SpeechesController extends My_Center_Controller
 							
 							$transport = new Zend_Mail_Transport_Smtp(Zend_Registry::getInstance()->get('mailConfigs')['host'],$config);
 							Zend_Mail::setDefaultTransport($transport);
-							$mail = new Zend_Mail("UTF-8");
-							$mail->setSubject('Your interested speech will begin');
-							$mail->setFrom(Zend_Registry::getInstance()->get('mailConfigs')['from']);
-							$mail->addTo("tanxiao@in-sync.co");
+							
 							foreach ($interestOfUsers as $item)
 							{
+								$mail = new Zend_Mail("UTF-8");
+								$mail->setSubject('Your interested speech will begin');
+								$mail->setFrom(Zend_Registry::getInstance()->get('mailConfigs')['from']);
 								$userInfo = $userCollection -> findOne(array('_id' => new MongoId($item['userID'])));
-								$mail->addCc($userInfo['email']);													
+								$mail->addTo($userInfo['email']);		
+								$mail->setBodyHtml(
+										'<h3>Subject: ' .$speechInfo['subject']."</h3>"
+										. '<h3>Where: ' .$speechInfo['where']."</h3>"
+										. '<h3>When: ' .date("Y-m-d H:i:s", $speechInfo['when']->sec) ."</h3>"
+										. '<h3>When: ' .$speechInfo['when'] . "</h3>"
+										. $speechInfo['description']
+								);			
+								$mail->send();
 							}
-							$mail->setBodyHtml(
-                                '<h3>Subject: ' .$speechInfo['subject']."</h3>"
-                                . '<h3>Where: ' .$speechInfo['where']."</h3>"
-                                . '<h3>When: ' .date("Y-m-d H:i:s", $speechInfo['when']->sec) ."</h3>"
-                                . '<h3>When: ' .$speechInfo['when'] . "</h3>"
-							    . $speechInfo['description']
-                            );
-							
-							$mail->send();
+			
 						}
 						
 						Zend_Mail::clearDefaultTransport();
