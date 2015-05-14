@@ -353,7 +353,7 @@ class SpeechesController extends My_Center_Controller
 							foreach ($interestOfUsers as $item)
 							{
 								$userInfo = $userCollection -> findOne(array('_id' => new MongoId($item['userID'])));
-								$mail->addBcc($userInfo['email']);															
+								$mail->addCc($userInfo['email']);															
 							}
 							
 							$mail->setBodyHtml(
