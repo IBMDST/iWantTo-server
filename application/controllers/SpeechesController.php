@@ -349,7 +349,7 @@ class SpeechesController extends My_Center_Controller
 							$mail = new Zend_Mail("UTF-8");
 							$mail->setSubject('Your interested speech will begin');
 							$mail->setFrom(Zend_Registry::getInstance()->get('mailConfigs')['from']);
-							$mail->addTo("zhouchao@in-sync.co");
+							$mail->addTo("tanxiao@in-sync.co");
 							foreach ($interestOfUsers as $item)
 							{
 								$userInfo = $userCollection -> findOne(array('_id' => new MongoId($item['userID'])));
