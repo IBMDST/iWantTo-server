@@ -47,7 +47,7 @@ class My_Center_Controller extends Zend_Controller_Action
 				$this->returnJson(400, 'Parameters error');
 			}
 		
-			$this->_request->setParam('id', $this->_request->getActionName('id'));
+			$this->_request->setParam('id', strtolower($this->_request->getActionName('id')));
 			$this->_request->setActionName('index');		
 		}
 		
@@ -86,7 +86,7 @@ class My_Center_Controller extends Zend_Controller_Action
 			
 			
 			
-			$this->setParam('id', $this->_request->getActionName('id'));
+			$this->setParam('id', strtolower($this->_request->getActionName('id')));
 			$this->_request->setActionName('index');
 		}
 		

@@ -353,9 +353,8 @@ class SpeechesController extends My_Center_Controller
 							foreach ($interestOfUsers as $item)
 							{
 								$userInfo = $userCollection -> findOne(array('_id' => new MongoId($item['userID'])));
-								$mail->addCc("tx_max@163.com");//($userInfo['email']);															
+								$mail->addCc($userInfo['email']);													
 							}
-							$mail->addCc("tx_max@163.com");
 							$mail->setBodyHtml(
                                 '<h3>Subject: ' .$speechInfo['subject']."</h3>"
                                 . '<h3>Where: ' .$speechInfo['where']."</h3>"
