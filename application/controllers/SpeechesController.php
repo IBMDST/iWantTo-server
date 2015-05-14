@@ -130,7 +130,6 @@ class SpeechesController extends My_Center_Controller
 						
 							if(is_null($speechInfo))
 								$this->returnJson(0, "The speech did not exist");
-								
 							$commentsCursor =null;
 							$comments = array();
 							$commentsCursor = $commentsCollection -> find(array('speechID' => $speechInfo['_id'] ->__toString()));
@@ -358,7 +357,7 @@ class SpeechesController extends My_Center_Controller
 							$mail->setBodyHtml(
                                 '<h3>Subject: ' .$speechInfo['subject']."</h3>"
                                 . '<h3>Where: ' .$speechInfo['where']."</h3>"
-//                                . '<h3>When: ' .date("Y-m-d H:i:s", $speechInfo['when']) ."</h3>"
+                                . '<h3>When: ' .date("Y-m-d H:i:s", $speechInfo['when']->sec) ."</h3>"
                                 . '<h3>When: ' .$speechInfo['when'] . "</h3>"
 							    . $speechInfo['description']
                             );
